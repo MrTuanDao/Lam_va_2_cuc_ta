@@ -247,6 +247,10 @@ void help() {
 	cout<<"16. date        : Displays or sets the date"<<endl;
 	cout<<"17. exit        : Exit TinyShell."<<endl;
 }
+
+// lammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+
 void clear() {
 	system("cls");
 	cout<<"                      SHELL PROJECT                      "<<endl;
@@ -422,7 +426,7 @@ void addPath() {
     RegCloseKey(hkey);
 }
 
-
+//suonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
 // Function for *.bat to read
 
 void autoResume(){
@@ -669,6 +673,10 @@ void run() {
 	    }
 		
 }
+
+//tuannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+
+
 int main() {
 	  map < string, char*>  demand; 
 	 demand.insert( std::make_pair<string, char*>("checkThread", "" ) );
