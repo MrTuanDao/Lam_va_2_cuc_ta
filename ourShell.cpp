@@ -703,7 +703,7 @@ int main() {
 	 processList.insert("clock.exe");
 	 processList.insert("calculator.exe");
 	 processList.insert("ourShell.exe");
-	 getcwd(currentfolder, 256); //in ra duong dan 
+	 getcwd(currentfolder, 256); //in ra đường dẫn
 	 string dm;
 	 clear();
 	 char a;
