@@ -500,8 +500,7 @@ void autoPause(){
 void autoKillProcess(){ 
 	cout<<"################################################################################"<<endl; 
 	cout<<"######################### Task Process Terminator ##############################"<<endl; 
-	cout<<"################################################################################"<<endl; // string added for ui purposes
-	cout<<""<<endl;
+	cout<<"################################################################################"<<endl; 
 	cout<<""<<endl;
 	cout<<""<<endl;
 	int run_this_program=1; //parameter which determines if program will keep running
@@ -514,7 +513,7 @@ void autoKillProcess(){
 	 	hProcessSnap = CreateToolhelp32Snapshot( TH32CS_SNAPPROCESS, 0 ); //take "snapshot" of processes running
 	 	pe32.dwSize = sizeof( PROCESSENTRY32 ); //size of PROCESSENTRY32 [unused]
 	 	vector <string> process_name; //initialize vector named "process_name" where each element will be a string (process name)
-	 	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	 	
 	
 		// record all detetected running processes #######################################
 		while( Process32Next( hProcessSnap, &pe32 ) ){ //for each object (pe32) in hprocesssnap [Process32Next runs through processes]
@@ -598,6 +597,7 @@ void autoDir(){
         cout << files[i] << '\n';
     }
 }
+// liet ke cac file thu muc trong dg dan pp
 
 void autoAddPath() {
 	HKEY hkey;
@@ -615,6 +615,8 @@ void autoAddPath() {
     RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) path, strlen(path));
     RegCloseKey(hkey);
 }
+
+
 void cdProcess() {
 	system("dir");
 	cout<<"Enter the directory <DIR> folder: ";
