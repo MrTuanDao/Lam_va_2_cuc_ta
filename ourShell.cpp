@@ -39,6 +39,8 @@ void kill(string p2t) {
 		string cmmdtsk="taskkill /IM "+namep+" /F"; 
 		system(cmmdtsk.c_str());
 }
+// ket thuc tien trinh co ten la namep //trt
+
 void myCreateProcessParallel(char* path) {
 	STARTUPINFO si;
     PROCESS_INFORMATION pi;
@@ -430,7 +432,7 @@ void addPath() {
 // Function for *.bat to read
 
 void autoResume(){
-	int n=PE.size();
+	int n=PE.size();    // n la so tien trinh dang bi pause
 	char pname[100];
 	if (n==0){
 	cout<<"No pending processes!"<<endl;
@@ -442,23 +444,24 @@ void autoResume(){
 	}
 	cout<<"Enter the process name to resume: ";
 	Sleep(500);
-	cout << pp << endl;
+	cout << pp << endl;		//nhap ten tien trinh 
 	for (int i=0;i<n;i++){
-		if (!strcmp(PE[i].szExeFile,pp.c_str())){
-			DebugActiveProcessStop(PE[i].th32ProcessID);
-			PE.erase(PE.begin()+i);
+		if (!strcmp(PE[i].szExeFile,pp.c_str())){			// ktra xem pp co khop voi ten 1 tien trinh dang pause k 
+			DebugActiveProcessStop(PE[i].th32ProcessID);	// go lenh pause
+			PE.erase(PE.begin()+i);							// xoa tien trinh vua dc go ra khoi ds cac tien trih dang pause
 		}
 	}
 }
+// cho 1 tien trinh dang bi pause chay tro lai
 
 void autoPause(){
 	char pname[100];
 	string name="ourShell.exe";
-	HANDLE hSnapShot ;
-	PROCESSENTRY32 ProcessInfo ;
-	ProcessInfo.dwSize =sizeof(PROCESSENTRY32);
-	int count =0;
-	hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);
+	HANDLE hSnapShot ;						// ctdl tro den 1 tai nguyen nhu tep, thu muc
+	PROCESSENTRY32 ProcessInfo ;			// ctdl luu thong tin tien trinh
+	ProcessInfo.dwSize =sizeof(PROCESSENTRY32);		
+	int count =0; 		// dem tham so tien trinh
+	hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);		// tao 1 snapshot ds cac tien trih 
 	if(INVALID_HANDLE_VALUE == hSnapShot) {
 		cout<<"CreateToolhelp32SnapShot Function Failed" <<endl;
 		cout<< "Error No - "<<GetLastError()<<endl;
@@ -472,7 +475,8 @@ void autoPause(){
              	if(ProcessInfo.szExeFile==name) continue;
 				cout<<++count<<". "<<ProcessInfo.szExeFile<<" - PID: "<< ProcessInfo.th32ProcessID<<endl;
         } while( Process32Next( hSnapShot, &ProcessInfo ) );
-    }
+		// vong while nay in ra cac tien trinh dang chay (trong hSnapshot)
+	}
     if (count==0) cout<<"No child processes!"<<endl;
 	cout<<"Enter the process name to pause: ";
 	Sleep(500);
@@ -482,9 +486,9 @@ void autoPause(){
         do{
             if(!strcmp(ProcessInfo.szExeFile,pc))
             {
-				PE.push_back(ProcessInfo);
+				PE.push_back(ProcessInfo);  	// them vao ds pause
 				countProc++;
-				DebugActiveProcess(ProcessInfo.th32ProcessID);
+				DebugActiveProcess(ProcessInfo.th32ProcessID); // tam dung go loi, tao dk cho vc dung
 				break;
             }
         }while( Process32Next( hSnapShot, &ProcessInfo ) );
