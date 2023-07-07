@@ -260,7 +260,7 @@ void clear() {
 	system("cls");
 	cout<<"                      SHELL PROJECT                      "<<endl;
 	cout<<"---------------------------------------------------------"<<endl;
-	cout<<"AUTHOR: Ngoc Bao Nguyen, Hao NQ, Bang Nguyen , Truong Vu "<<endl;
+	cout<<"AUTHOR: Nguyen Hoang Lam, Dao Quoc Tuan, Nguyen Trong Tuan "<<endl;
 	cout<<"---------------------------------------------------------\n"<<endl;
 	help();
 }
@@ -618,10 +618,10 @@ void autoAddPath() {
     RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) path, strlen(path));
     RegCloseKey(hkey);
 }
-
+// deo hieu
 
 void cdProcess() {
-	system("dir");
+	system("dir");		// in ra ds file folder trong folfer hien tai
 	cout<<"Enter the directory <DIR> folder: ";
 	string direct;
 	cin>>direct;
@@ -634,7 +634,7 @@ void cdProcess() {
 		for(int i=255;i>=0;i--) {
 			if(tmp[i]=='/') {
 			tmp[i]='\0';
-			}
+			}			// tim "/" cuoi de cho thanh NULL
 		}
 		if( !SetCurrentDirectory(tmp))
         {
@@ -658,6 +658,8 @@ void cdProcess() {
       return;
    }
 }
+// nhap mot folder con cua 1 folder dang lam viec
+// vd: dang o c:\users thi nhap documents
 
 void run() {
 	system("dir");
@@ -679,8 +681,7 @@ void run() {
 	    }
 	    else {
 			myCreateProcessOBO(char_array);
-	    }
-		
+	    }		
 }
 
 //tuannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
