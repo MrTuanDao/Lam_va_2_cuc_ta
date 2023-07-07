@@ -256,7 +256,7 @@ void help() {
 // lammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 
 
-void clear() {
+void clear() {//goi cls của system sau đó in ra Intro và gọi help() 
 	system("cls");
 	cout<<"                      SHELL PROJECT                      "<<endl;
 	cout<<"---------------------------------------------------------"<<endl;
@@ -276,10 +276,12 @@ void checkThread() {//Được gọi khi nhập "checkThread" - liệt kê tất
 	hProcessInfo.dwSize =sizeof(PROCESSENTRY32); /*Việc thiết lập dwSize bằng kích thước cấu trúc đảm bảo rằng hệ điều hành có thể truy cập vào các trường khác của cấu trúc một cách chính xác và đảm bảo rằng không có tràn bộ nhớ xảy ra.*/
 	int count =0;
 	hhSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0); /* tạo một bản sao (snapshot) của các quá trình đang chạy trên hệ thống VÀ gán nó cho hhSnapShot*/
-	if(INVALID_HANDLE_VALUE == hhSnapShot) {
-		cout<<"CreatToolhelp32SnapShot Function Failed" <<endl;
-		cout<< "Error No - "<<GetLastError()<<endl;
-	}
+	
+	//sườn thấy hàm if dưới đây khá vô dụng, ít nhất trong hhSnapShot luôn có tiến trình ourShell.exe
+	// if(INVALID_HANDLE_VALUE == hhSnapShot) {
+	// 	cout<<"CreatToolhelp32SnapShot Function Failed" <<endl;/* Chắc là bỏ đi cũng không sao*/
+	// 	cout<< "Error No - "<<GetLastError()<<endl;
+	// }
 	/* Process32Next: Returns TRUE if the next entry of the process list has been copied to the buffer or FALSE otherwise. The ERROR_NO_MORE_FILES error value is returned by the GetLastError function if no processes exist or the snapshot does not contain process information.*/
 	while(Process32Next(hhSnapShot, &hProcessInfo) !=FALSE) { 
 		if(processList.find(hProcessInfo.szExeFile)==processList.end()) continue;  /*kiểm tra xem giá trị của chuỗi hProcessInfo.szExeFile có tồn tại trong processList hay không.*/
@@ -308,6 +310,7 @@ void checkThread() {//Được gọi khi nhập "checkThread" - liệt kê tất
 	}
 	CloseHandle(hSnapShot);
 }
+/*bỏ hàm SetTeColor vì cho rằng không cần thiết*/
 void SetTeColor(WORD color){ 
     HANDLE hConsoleOutput;
     hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -368,7 +371,7 @@ void killProcess(){
 	};                                                                                                                                                  //then, add jth process_num_occur element to new list
 	
 	SetTeColor(2);
-	cout<<"---------------Child processes that are running------------------"<<endl; 
+	cout<<"---------------Kill processes that are running------------------"<<endl; 
 	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
 	cout<<"PROCESS NAME || Number of processes of same name                                "<<endl; 
 	for(int k=0;k<=(process_name_unique.size()-1);k++){ 
@@ -400,19 +403,21 @@ void killAll() {
 		}
 }
 void dir(){
-	cout << "Input path: ";
-    string path;
-    cin >> path;
-    DIR* dir;
-    dirent* pdir;
-    vector<string> files;
-    dir = opendir(path.c_str());
-    while (pdir = readdir(dir)) {
-        files.push_back(pdir->d_name);
-    }
-    for(int i = 0; i < files.size(); ++i){
-        cout << files[i] << '\n';
-    }
+	// cout << "Input path: ";
+    // string path;
+    // cin >> path;
+    // DIR* dir;
+    // dirent* pdir;
+    // vector<string> files;
+    // dir = opendir(path.c_str());
+    // while (pdir = readdir(dir)) {
+    //     files.push_back(pdir->d_name);
+    // }
+    // for(int i = 0; i < files.size(); ++i){
+    //     cout << files[i] << '\n';
+    // }
+	//dưới đây là cách của sườn
+	system("dir");
 }
 void path() {
 	char *value;value = getenv("PATH");
@@ -592,7 +597,7 @@ void autoKillProcess(){
 		cout<<""<<endl; // string added for UI purposes
 }
 
-void autoDir(){
+void autoDir(){//sườn check thử thì lệnh autoDir này kh chạy, có thể cân nhắc bỏ nó
 	cout << "Input path: ";
 	Sleep(500);
     cout << pp << endl;
@@ -713,6 +718,7 @@ int main() {
 	 demand.insert( std::make_pair<string, char*>( "cd", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "run", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "date", "" ) );
+	 demand.insert( std::make_pair<string, char*>( "autodir", "" ) );
 	 processList.insert("clock.exe");
 	 processList.insert("calculator.exe");
 	 processList.insert("ourShell.exe");
@@ -886,6 +892,12 @@ int main() {
 		 	run();
 		 	continue;
 		 }
+		//suon bo test ham
+		if(dm=="autodir"){
+			autoDir();
+			continue;
+		}
+		//suon bo test ham o phias tren
 		 char tmpp[256];
 		 getcwd(tmpp, 256);
 		 SetCurrentDirectory(currentfolder);
