@@ -727,14 +727,14 @@ int main() {
 	 	if (dm=="<bat>"){
 	 		string b;
 	 		ifstream infile; /* Lớp ifstream là một lớp được sử dụng để đọc dữ liệu từ tệp tin.*/
-   			infile.open("Shell.txt"); //mở file Shell.txt và chạy từng dòng 
+   			infile.open("Shell.bat"); //mở file Shell.txt và chạy từng dòng 
 	 		while(true) {
 	 			Sleep(1000);
 	 			cout<<endl<<"--------------------------------------------------------"<<endl;
 				getcwd(tmp, 256);
 				cout << tmp <<"> ";
 	 			if (infile.eof()) break; 
-	 			infile >> data; 
+	 			infile >> data; //đọc dữ liệu từ file và gán nó vào data, đọc theo dòng 
    				Sleep(500);
    				cout << data << endl;
    				
