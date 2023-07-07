@@ -17,7 +17,10 @@
 using namespace std;
 PROCESS_INFORMATION pi[MAX_PROCESS_RUNNING];
 vector <PROCESSENTRY32> PE;
-set <string>  processList;
+set <string>  processList; 
+/* Hàm processList có thể được sử dụng để thực hiện các hoạt động trên tập hợp này, 
+chẳng hạn như thêm phần tử vào tập hợp, xóa phần tử khỏi tập hợp, 
+kiểm tra sự tồn tại của phần tử trong tập hợp, hoặc lặp qua các phần tử trong tập hợp.*/
 int countProc=0;
 string pp;
 string vp;
@@ -684,7 +687,7 @@ void run() {
 
 
 int main() {
-	  map < string, char*>  demand; 
+	  map < string, char*>  demand; //ánh xạ từ string tới char*
 	 demand.insert( std::make_pair<string, char*>("checkThread", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "checkProcess", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "killProcess", "" ) );
@@ -705,13 +708,13 @@ int main() {
 	 processList.insert("clock.exe");
 	 processList.insert("calculator.exe");
 	 processList.insert("ourShell.exe");
-	 getcwd(currentfolder, 256); //in ra đường dẫn
+	 getcwd(currentfolder, 256); //lấy đường dẫn và gán cho currentfolder 
 	 string dm;
 	 clear();
 	 char a;
 	 char tmp[256];
 	 string data;
-	 while(true) {        
+	 while(true) {        // đọc input và so sánh với command 
 	 	cout<<endl<<"--------------------------------------------------------"<<endl;
         getcwd(tmp, 256);
         cout << tmp <<"> ";
@@ -723,14 +726,14 @@ int main() {
 	 	}
 	 	if (dm=="<bat>"){
 	 		string b;
-	 		ifstream infile; 
-   			infile.open("Shell.txt");
+	 		ifstream infile; /* Lớp ifstream là một lớp được sử dụng để đọc dữ liệu từ tệp tin.*/
+   			infile.open("Shell.txt"); //mở file Shell.txt và chạy từng dòng 
 	 		while(true) {
 	 			Sleep(1000);
 	 			cout<<endl<<"--------------------------------------------------------"<<endl;
-        getcwd(tmp, 256);
-        cout << tmp <<"> ";
-	 			if (infile.eof()) break;
+				getcwd(tmp, 256);
+				cout << tmp <<"> ";
+	 			if (infile.eof()) break; 
 	 			infile >> data; 
    				Sleep(500);
    				cout << data << endl;
