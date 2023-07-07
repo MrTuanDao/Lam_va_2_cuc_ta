@@ -395,7 +395,7 @@ void killProcess(){
 void killAll() {
 	  for (std::set<string>::iterator it=processList.begin(); it!=processList.end(); ++it){
 		if(*it=="ourShell.exe" ) continue;
-		string r= * it;
+		string r= * it; //kill từng phẩn tử trong processList
 		kill(r);
 		}
 }
