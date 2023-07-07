@@ -4,7 +4,7 @@
 <p>Research Project 1: Tìm hiểu về Semaphores</p>
 <p>Research Project 2: Tìm hiểu về Quản lý bộ nhớ trong vi xử lý intel486 và Hệ điều hành Linux</p>
 # Pratice Project 1: 
-# Giới thiệu
+# Giới thiệu 
 <p>Thiết kế và cài đặt một shell đơn giản (myShell)</p>
 # Mục đích
 <p>Nghiên cứu các API quản lý tiến trình trong Windows</p>

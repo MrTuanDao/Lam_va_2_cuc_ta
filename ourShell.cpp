@@ -264,19 +264,26 @@ void clear() {
 	cout<<"---------------------------------------------------------\n"<<endl;
 	help();
 }
-void checkThread() {
+void checkThread() {//Được gọi khi nhập "checkThread" - liệt kê tất cả thread đang chạy và quản lý bởi Tinyshell
 	map < int ,string> ppip;
-	HANDLE hhSnapShot =INVALID_HANDLE_VALUE;
-	PROCESSENTRY32 hProcessInfo ={0};
-	hProcessInfo.dwSize =sizeof(PROCESSENTRY32);
+	// HANDLE là gì?
+	//HANDLE đại diện cho một con trỏ tới một đối tượng hệ thống, chẳng hạn như tệp tin, quy trình, hoặc cửa sổ.
+	HANDLE hhSnapShot =INVALID_HANDLE_VALUE; /*INVALID_HANDLE_VALUE biểu thị một handle (con trỏ) không hợp lệ hoặc không tồn tại.*/
+	//
+	PROCESSENTRY32 hProcessInfo ={0}; /*PROCESSENTRY32 là một cấu trúc dùng để lưu trữ thông tin về một tiến trình (process). Cấu trúc này bao gồm các trường như kích thước của cấu trúc, tham chiếu đến tiến trình cha, ID tiến trình, tên tiến trình, và nhiều thông tin khác.
+
+	Khi bạn khởi tạo biến hProcessInfo với giá trị {0}, điều này có nghĩa là tất cả các byte trong biến được đặt thành giá trị 0. Đây là một cách phổ biến để đảm bảo rằng tất cả các trường trong cấu trúc được thiết lập ban đầu là giá trị mặc định hoặc trống.*/
+	hProcessInfo.dwSize =sizeof(PROCESSENTRY32); /*Việc thiết lập dwSize bằng kích thước cấu trúc đảm bảo rằng hệ điều hành có thể truy cập vào các trường khác của cấu trúc một cách chính xác và đảm bảo rằng không có tràn bộ nhớ xảy ra.*/
 	int count =0;
-	hhSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);
+	hhSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0); /* tạo một bản sao (snapshot) của các quá trình đang chạy trên hệ thống VÀ gán nó cho hhSnapShot*/
 	if(INVALID_HANDLE_VALUE == hhSnapShot) {
 		cout<<"CreatToolhelp32SnapShot Function Failed" <<endl;
 		cout<< "Error No - "<<GetLastError()<<endl;
 	}
-	while(Process32Next(hhSnapShot, &hProcessInfo) !=FALSE) {
-		if(processList.find(hProcessInfo.szExeFile)==processList.end()) continue;
+	/* Process32Next: Returns TRUE if the next entry of the process list has been copied to the buffer or FALSE otherwise. The ERROR_NO_MORE_FILES error value is returned by the GetLastError function if no processes exist or the snapshot does not contain process information.*/
+	while(Process32Next(hhSnapShot, &hProcessInfo) !=FALSE) { 
+		if(processList.find(hProcessInfo.szExeFile)==processList.end()) continue;  /*kiểm tra xem giá trị của chuỗi hProcessInfo.szExeFile có tồn tại trong processList hay không.*/
+		/*szExeFile là một trường (field) trong biến hProcessInfo kiểu PROCESSENTRY32. Trường này chứa tên của tệp thực thi (executable file) của tiến trình.*/
 		ppip[hProcessInfo.th32ProcessID]=hProcessInfo.szExeFile;
 		}
 	CloseHandle(hhSnapShot);
