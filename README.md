@@ -15,7 +15,7 @@
 <p>    background mode: Shell và tiến trình thực hiện song song</p>
 <p>Shell chứa các câu lệnh quản lý tiến trình</p>
 <p>    List: in ra DS tiến trình (process Id, Cmd name, status)</p>
-<p>    Kill, Stop, Resume.. một background process</p>
+<p>    Kill, Stop, Resume.. một background process</p> 
 <p>    Shell hiểu một số lệnh đặc biệt (exit, help, date, time, dir,..)</p>
 <p>    path/addpath : xem và đặt lại biến môi trường</p>
 <p>    Shell có thể nhận tín hiệu ngắt từ bàn phím để hủy bỏ</p>
