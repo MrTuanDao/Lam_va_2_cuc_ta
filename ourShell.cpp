@@ -508,7 +508,7 @@ void autoKillProcess(){
 	cout<<""<<endl;
 	int run_this_program=1; //parameter which determines if program will keep running
 	// while program is running (this section is intended to repeat until user exits program)
-		//initialize objects@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		//initialize objects
 		HANDLE hProcessSnap; //create handle identifier for object hprocesssnap
 	  	HANDLE hProcess; //create handle identifier for object hprocess
 	 	PROCESSENTRY32 pe32; //Describes an entry from a list of the processes residing in the system address space when a snapshot was taken.
