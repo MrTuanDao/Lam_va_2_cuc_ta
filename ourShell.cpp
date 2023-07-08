@@ -98,7 +98,7 @@ void myCreateProcessOBO(char* path) {
 	cout<<"Process ID = "<<pi.dwProcessId<<endl;
 	cout<<"Thread ID = "<< pi.dwThreadId<<endl;
 	}
-	while(1) {
+	while(1) {//thêm while(1) để ourShell phải chờ cái này kết thúc 
 		HANDLE hSnapShot ;
 		PROCESSENTRY32 ProcessInfo ;
 		ProcessInfo.dwSize =sizeof(PROCESSENTRY32);
@@ -301,8 +301,11 @@ void checkThread() {//Được gọi khi nhập "checkThread" - liệt kê tất
 	}
 	map<int,string> ::iterator it;
 	cout<<"No.\t\tOwner Process ID\t\tOwner Process\t\tThread ID"<<endl;
+	string prev="random_fhn2";
 	while(Thread32Next(hSnapShot, &ThreadInfo) !=FALSE) {
 		if(ppip.find(ThreadInfo.th32OwnerProcessID)==ppip.end()) continue;
+		// if(ppip[ThreadInfo.th32OwnerProcessID]==prev) continue;
+		prev = ppip[ThreadInfo.th32OwnerProcessID];
 		cout<<"------------------------------------------------------------------------------------"<<endl;
 		cout<<++count<<".\t\t     "<<ThreadInfo.th32OwnerProcessID<<"\t\t\t"<<ppip[ThreadInfo.th32OwnerProcessID]<<"\t\t  "<<ThreadInfo.th32ThreadID<<endl;
 		cout<<"------------------------------------------------------------------------------------"<<endl;
@@ -338,7 +341,7 @@ void killProcess(){
 	vector <string> process_name; 
 
 	while( Process32Next( hProcessSnap, &pe32 ) ){ 
-		process_name.push_back(pe32.szExeFile);	
+		process_name.push_back(pe32.szExeFile);	//Process32Next(hProcessSnap, &pe32) - Gọi hàm Process32Next để lấy thông tin về quá trình tiếp theo trong bản sao của danh sách quá trình (được lưu trữ trong hProcessSnap). Hàm này trả về TRUE nếu còn quá trình tiếp theo, và gán thông tin của quá trình đó vào biến pe32 kiểu PROCESSENTRY32.
 	};
 	
 	vector <string> process_name_unique;
@@ -372,26 +375,26 @@ void killProcess(){
 	
 	SetTeColor(2);
 	cout<<"---------------Kill processes that are running------------------"<<endl; 
-	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+	cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
 	cout<<"PROCESS NAME || Number of processes of same name                                "<<endl; 
 	for(int k=0;k<=(process_name_unique.size()-1);k++){ 
 			if(processList.find(process_name_unique[k])==processList.end()) continue;
 		cout<<process_name_unique[k]; 
 		cout<<" || "<<process_num_occur_sorted[k]<<endl;
 	};
-	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl; 
+	cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl; 
 	SetTeColor(15);
 	
 	string p2t;
 	cout<<endl<<endl;
 	cout<<"For example, enter 'chrome.exe' to terminate all processes of that handle name."<<endl; 
-	cout<<"(exit the program if you do not wish to progress)"<<endl;
+	// cout<<"(exit the program if you do not wish to progress)"<<endl;
 	cout<<""<<endl; 
 	cout<<"Process (name) to terminate:";
 	cin>>p2t;
 	std::string namep = p2t;
 	std::string cmmdtsk="taskkill /IM "+namep+" /F"; 
-	system(cmmdtsk.c_str());
+	system(cmmdtsk.c_str()); // Hàm c_str() được sử dụng để chuyển đổi chuỗi cmmdtsk thành một con trỏ c-style (mảng ký tự) được yêu cầu bởi hàm system.
 	cout<<""<<endl; 
 	cout<<""<<endl; 
 }
@@ -403,23 +406,23 @@ void killAll() {
 		}
 }
 void dir(){
-	// cout << "Input path: ";
-    // string path;
-    // cin >> path;
-    // DIR* dir;
-    // dirent* pdir;
-    // vector<string> files;
-    // dir = opendir(path.c_str());
-    // while (pdir = readdir(dir)) {
-    //     files.push_back(pdir->d_name);
-    // }
-    // for(int i = 0; i < files.size(); ++i){
-    //     cout << files[i] << '\n';
-    // }
+	cout << "Input path: ";
+    string path;
+    cin >> path;
+    DIR* dir;
+    dirent* pdir;
+    vector<string> files;
+    dir = opendir(path.c_str());
+    while (pdir = readdir(dir)) {
+        files.push_back(pdir->d_name);
+    }
+    for(int i = 0; i < files.size(); ++i){
+        cout << files[i] << '\n';
+    }
 	//dưới đây là cách của sườn
-	system("dir");
+	// system("dir");
 }
-void path() {
+void path() {// in ra tất cả phần tử trong PATH - xem biến môi trường 
 	char *value;value = getenv("PATH");
     for (int i=0;value[i]!='\0';i++) {
     	if(value[i]==';'&&value[i+1]==';') continue;
@@ -427,7 +430,7 @@ void path() {
     	else cout<<value[i];
     }
 }
-void addPath() {
+void addPath() { //đặt lại biến môi trường
 	HKEY hkey;
     long regOpenResult;
     const char key_name[] = "Environment";
@@ -719,6 +722,7 @@ int main() {
 	 demand.insert( std::make_pair<string, char*>( "run", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "date", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "autodir", "" ) );
+	 demand.insert( std::make_pair<string, char*>( "hello", "hello.exe" ) );
 	 processList.insert("clock.exe");
 	 processList.insert("calculator.exe");
 	 processList.insert("ourShell.exe");
@@ -897,6 +901,7 @@ int main() {
 			autoDir();
 			continue;
 		}
+		
 		//suon bo test ham o phias tren
 		 char tmpp[256];
 		 getcwd(tmpp, 256);
