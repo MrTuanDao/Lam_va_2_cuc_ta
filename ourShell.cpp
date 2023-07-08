@@ -15,8 +15,8 @@
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 #define MAX_PROCESS_RUNNING 100
 using namespace std;
-PROCESS_INFORMATION pi[MAX_PROCESS_RUNNING];
-vector <PROCESSENTRY32> PE;
+PROCESS_INFORMATION pi[MAX_PROCESS_RUNNING];/*PROCESS_INFORMATION là một cấu trúc trong Windows API được sử dụng để lưu trữ thông tin về tiến trình (process). Cấu trúc này bao gồm các trường như handle của tiến trình, handle của luồng chính của tiến trình, ID của tiến trình, và ID của luồng chính.*/
+vector <PROCESSENTRY32> PE;/* Vector là một cấu trúc dữ liệu trong C++ cho phép mở rộng kích thước tự động và hỗ trợ các thao tác như thêm, xóa và truy cập các phần tử trong danh sách.*/
 set <string>  processList; 
 /* Hàm processList có thể được sử dụng để thực hiện các hoạt động trên tập hợp này, 
 chẳng hạn như thêm phần tử vào tập hợp, xóa phần tử khỏi tập hợp, 
