@@ -241,7 +241,7 @@ void help() {
 	cout<<"5. clear        : Clear screen"<<endl;
 	cout<<"6. killProcess  : Terminate a running process which is managed by TinyShell"<<endl;
 	cout<<"7. clock        : Open digital clock"<<endl;
-	cout<<"8. <bat>        : Execute a .bat file"<<endl;
+	cout<<"8. bat          : Execute a .bat file"<<endl;
 	cout<<"9. pause        : Pause a running child process"<<endl;
 	cout<<"10. resume      : Resume a pending process"<<endl;
 	cout<<"11. dir         : List all components in the input directory"<<endl;
@@ -745,7 +745,7 @@ int main() {
 	 demand.insert( std::make_pair<string, char*>( "dir", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "path", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "addPath", "" ) );
-	 demand.insert( std::make_pair<string, char*>( "<bat>", "" ) );
+	 demand.insert( std::make_pair<string, char*>( "bat", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "cd", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "run", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "date", "" ) );
@@ -770,7 +770,7 @@ int main() {
 	 		cout<<"The demand isn't available!"<<endl;
 	 		continue;
 	 	}
-	 	if (dm=="<bat>"){
+	 	if (dm=="bat"){
 	 		string b;
 	 		ifstream infile; /* Lớp ifstream là một lớp được sử dụng để đọc dữ liệu từ tệp tin.*/
    			infile.open("Shell.bat"); //mở file Shell.txt và chạy từng dòng 
@@ -788,7 +788,7 @@ int main() {
 					killAll();
 					return 0;
 				}
-	 			if(demand.find(data)==demand.end() || data == "<bat>") {
+	 			if(demand.find(data)==demand.end() || data == "bat") {
 	 				cout<<"The demand isn't available!"<<endl;
 	 				continue;
 	 			}
