@@ -437,11 +437,14 @@ void addPath() { //đặt lại biến môi trường
     cout << "Enter value path: ";
     string new_value;
     cin >> new_value;
-    const char *path=new_value.c_str();                                               //new_value path need to update 
+    const char *path=new_value.c_str();//new_value path need to update 
 
     regOpenResult = RegOpenKeyEx(HKEY_CURRENT_USER,key_name, 0, KEY_ALL_ACCESS, &hkey);
-    string var = "Path";
-    LPCSTR stuff = var.c_str();                                                   //Variable Name 
+
+    string var = "PATH";
+	// cout <<"Enter variable name:";
+	// cin >> var;
+    LPCSTR stuff = var.c_str();//Variable Name 
     RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) path, strlen(path));
     RegCloseKey(hkey);
 }
