@@ -454,16 +454,8 @@ void path() {
     else
     {
         std::cout << "Failed to open registry key." << std::endl;
-void path() {// in ra tất cả phần tử trong PATH - xem biến môi trường 
-	char *value;value = getenv("PATH");
-    for (int i=0;value[i]!='\0';i++) {
-    	// if(value[i]==';'&&value[i+1]==';') continue;
-    	if(value[i]==';') cout<<endl;
-    	else
-		 cout<<value[i];
-    }
-	// system("$env:PATH -split ';'");
-}
+	}
+}	
 void addPath() { //đặt lại biến môi trường
 	HKEY hkey;
     long regOpenResult;
@@ -471,25 +463,16 @@ void addPath() { //đặt lại biến môi trường
     cout << "Enter value path: ";
     string new_value;
     cin >> new_value;
-    const char *new_path=new_value.c_str();//new_value path need to update 
+    const char *path=new_value.c_str();//new_value path need to update 
 
     regOpenResult = RegOpenKeyEx(HKEY_CURRENT_USER,key_name, 0, KEY_ALL_ACCESS, &hkey);
-<<<<<<< HEAD
     string var;
 	cout << "Enter variable name: ";
 	cin >> var;
     LPCSTR stuff = var.c_str();                                                   //Variable Name 
     RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) path, strlen(path));
-=======
-
-    string var = "PATH";
-	// cout <<"Enter variable name:";
-	// cin >> var;
-    LPCSTR stuff = var.c_str();//Variable Name 
-    RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) new_path, strlen(new_path));
->>>>>>> c7f8dfe4bfa9f345ef34c67bdba152735fab6d0c
     RegCloseKey(hkey);
-	path();
+
 }
 
 //suonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
