@@ -408,11 +408,36 @@ void dir(){
     }
 }
 void path() {
-	char *value;value = getenv("PATH");
-    for (int i=0;value[i]!='\0';i++) {
-    	if(value[i]==';'&&value[i+1]==';') continue;
-    	if(value[i]==';') cout<<endl;
-    	else cout<<value[i];
+	HKEY hKey;
+    BYTE value[2048];
+    DWORD valueSize = 2048;
+    TCHAR name[256];
+    DWORD nameSize = 256;
+
+    if (RegOpenKeyEx(HKEY_CURRENT_USER, "Environment", 0, KEY_READ, &hKey) == ERROR_SUCCESS)
+    {
+        for (DWORD i = 0; ; i++)
+        {
+            value[0] = '\0';
+            name[0] = '\0';
+            valueSize = 2048;
+            nameSize = 256;
+
+            if (RegEnumValue(hKey, i, name, &nameSize, NULL, NULL, value, &valueSize) == ERROR_SUCCESS)
+            {
+                std::cout << (i < 9 ? "0" : "") << i + 1 << ". " << name << " = " << value << std::endl;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        RegCloseKey(hKey);
+    }
+    else
+    {
+        std::cout << "Failed to open registry key." << std::endl;
     }
 }
 void addPath() {
@@ -425,7 +450,9 @@ void addPath() {
     const char *path=new_value.c_str();                                               //new_value path need to update 
 
     regOpenResult = RegOpenKeyEx(HKEY_CURRENT_USER,key_name, 0, KEY_ALL_ACCESS, &hkey);
-    string var = "Path";
+    string var;
+	cout << "Enter variable name: ";
+	cin >> var;
     LPCSTR stuff = var.c_str();                                                   //Variable Name 
     RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) path, strlen(path));
     RegCloseKey(hkey);
@@ -602,7 +629,7 @@ void autoDir(){
 }
 // liet ke cac file thu muc trong dg dan pp
 
-void autoAddPath() {
+void autoAddPath(){
 	HKEY hkey;
     long regOpenResult;
     const char key_name[] = "Environment";
