@@ -1,4 +1,5 @@
 #include <windows.h>
+// #trong tuan nguuuuuuuu
 #include <stdio.h>
 #include <conio.h>
 #include <bits/stdc++.h>
@@ -422,7 +423,6 @@ void dir(){
 	//dưới đây là cách của sườn
 	// system("dir");
 }
-<<<<<<< HEAD
 void path() {
 	HKEY hKey;
     BYTE value[2048];
@@ -454,7 +454,6 @@ void path() {
     else
     {
         std::cout << "Failed to open registry key." << std::endl;
-=======
 void path() {// in ra tất cả phần tử trong PATH - xem biến môi trường 
 	char *value;value = getenv("PATH");
     for (int i=0;value[i]!='\0';i++) {
@@ -462,7 +461,6 @@ void path() {// in ra tất cả phần tử trong PATH - xem biến môi trư�
     	if(value[i]==';') cout<<endl;
     	else
 		 cout<<value[i];
->>>>>>> c7f8dfe4bfa9f345ef34c67bdba152735fab6d0c
     }
 	// system("$env:PATH -split ';'");
 }
