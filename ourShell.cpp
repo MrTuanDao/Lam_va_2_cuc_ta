@@ -15,8 +15,8 @@
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 #define MAX_PROCESS_RUNNING 100
 using namespace std;
-PROCESS_INFORMATION pi[MAX_PROCESS_RUNNING];
-vector <PROCESSENTRY32> PE;
+PROCESS_INFORMATION pi[MAX_PROCESS_RUNNING];/*PROCESS_INFORMATION là một cấu trúc trong Windows API được sử dụng để lưu trữ thông tin về tiến trình (process). Cấu trúc này bao gồm các trường như handle của tiến trình, handle của luồng chính của tiến trình, ID của tiến trình, và ID của luồng chính.*/
+vector <PROCESSENTRY32> PE;/* Vector là một cấu trúc dữ liệu trong C++ cho phép mở rộng kích thước tự động và hỗ trợ các thao tác như thêm, xóa và truy cập các phần tử trong danh sách.*/
 set <string>  processList; 
 /* Hàm processList có thể được sử dụng để thực hiện các hoạt động trên tập hợp này, 
 chẳng hạn như thêm phần tử vào tập hợp, xóa phần tử khỏi tập hợp, 
@@ -98,7 +98,7 @@ void myCreateProcessOBO(char* path) {
 	cout<<"Process ID = "<<pi.dwProcessId<<endl;
 	cout<<"Thread ID = "<< pi.dwThreadId<<endl;
 	}
-	while(1) {
+	while(1) {//thêm while(1) để ourShell phải chờ cái này kết thúc 
 		HANDLE hSnapShot ;
 		PROCESSENTRY32 ProcessInfo ;
 		ProcessInfo.dwSize =sizeof(PROCESSENTRY32);
@@ -256,7 +256,7 @@ void help() {
 // lammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
 
 
-void clear() {
+void clear() {//goi cls của system sau đó in ra Intro và gọi help() 
 	system("cls");
 	cout<<"                      SHELL PROJECT                      "<<endl;
 	cout<<"---------------------------------------------------------"<<endl;
@@ -264,19 +264,28 @@ void clear() {
 	cout<<"---------------------------------------------------------\n"<<endl;
 	help();
 }
-void checkThread() {
+void checkThread() {//Được gọi khi nhập "checkThread" - liệt kê tất cả thread đang chạy và quản lý bởi Tinyshell
 	map < int ,string> ppip;
-	HANDLE hhSnapShot =INVALID_HANDLE_VALUE;
-	PROCESSENTRY32 hProcessInfo ={0};
-	hProcessInfo.dwSize =sizeof(PROCESSENTRY32);
+	// HANDLE là gì?
+	//HANDLE đại diện cho một con trỏ tới một đối tượng hệ thống, chẳng hạn như tệp tin, quy trình, hoặc cửa sổ.
+	HANDLE hhSnapShot =INVALID_HANDLE_VALUE; /*INVALID_HANDLE_VALUE biểu thị một handle (con trỏ) không hợp lệ hoặc không tồn tại.*/
+	//
+	PROCESSENTRY32 hProcessInfo ={0}; /*PROCESSENTRY32 là một cấu trúc dùng để lưu trữ thông tin về một tiến trình (process). Cấu trúc này bao gồm các trường như kích thước của cấu trúc, tham chiếu đến tiến trình cha, ID tiến trình, tên tiến trình, và nhiều thông tin khác.
+
+	Khi bạn khởi tạo biến hProcessInfo với giá trị {0}, điều này có nghĩa là tất cả các byte trong biến được đặt thành giá trị 0. Đây là một cách phổ biến để đảm bảo rằng tất cả các trường trong cấu trúc được thiết lập ban đầu là giá trị mặc định hoặc trống.*/
+	hProcessInfo.dwSize =sizeof(PROCESSENTRY32); /*Việc thiết lập dwSize bằng kích thước cấu trúc đảm bảo rằng hệ điều hành có thể truy cập vào các trường khác của cấu trúc một cách chính xác và đảm bảo rằng không có tràn bộ nhớ xảy ra.*/
 	int count =0;
-	hhSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);
-	if(INVALID_HANDLE_VALUE == hhSnapShot) {
-		cout<<"CreatToolhelp32SnapShot Function Failed" <<endl;
-		cout<< "Error No - "<<GetLastError()<<endl;
-	}
-	while(Process32Next(hhSnapShot, &hProcessInfo) !=FALSE) {
-		if(processList.find(hProcessInfo.szExeFile)==processList.end()) continue;
+	hhSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0); /* tạo một bản sao (snapshot) của các quá trình đang chạy trên hệ thống VÀ gán nó cho hhSnapShot*/
+	
+	//sườn thấy hàm if dưới đây khá vô dụng, ít nhất trong hhSnapShot luôn có tiến trình ourShell.exe
+	// if(INVALID_HANDLE_VALUE == hhSnapShot) {
+	// 	cout<<"CreatToolhelp32SnapShot Function Failed" <<endl;/* Chắc là bỏ đi cũng không sao*/
+	// 	cout<< "Error No - "<<GetLastError()<<endl;
+	// }
+	/* Process32Next: Returns TRUE if the next entry of the process list has been copied to the buffer or FALSE otherwise. The ERROR_NO_MORE_FILES error value is returned by the GetLastError function if no processes exist or the snapshot does not contain process information.*/
+	while(Process32Next(hhSnapShot, &hProcessInfo) !=FALSE) { 
+		if(processList.find(hProcessInfo.szExeFile)==processList.end()) continue;  /*kiểm tra xem giá trị của chuỗi hProcessInfo.szExeFile có tồn tại trong processList hay không.*/
+		/*szExeFile là một trường (field) trong biến hProcessInfo kiểu PROCESSENTRY32. Trường này chứa tên của tệp thực thi (executable file) của tiến trình.*/
 		ppip[hProcessInfo.th32ProcessID]=hProcessInfo.szExeFile;
 		}
 	CloseHandle(hhSnapShot);
@@ -292,8 +301,11 @@ void checkThread() {
 	}
 	map<int,string> ::iterator it;
 	cout<<"No.\t\tOwner Process ID\t\tOwner Process\t\tThread ID"<<endl;
+	string prev="random_fhn2";
 	while(Thread32Next(hSnapShot, &ThreadInfo) !=FALSE) {
 		if(ppip.find(ThreadInfo.th32OwnerProcessID)==ppip.end()) continue;
+		// if(ppip[ThreadInfo.th32OwnerProcessID]==prev) continue;
+		prev = ppip[ThreadInfo.th32OwnerProcessID];
 		cout<<"------------------------------------------------------------------------------------"<<endl;
 		cout<<++count<<".\t\t     "<<ThreadInfo.th32OwnerProcessID<<"\t\t\t"<<ppip[ThreadInfo.th32OwnerProcessID]<<"\t\t  "<<ThreadInfo.th32ThreadID<<endl;
 		cout<<"------------------------------------------------------------------------------------"<<endl;
@@ -301,6 +313,7 @@ void checkThread() {
 	}
 	CloseHandle(hSnapShot);
 }
+/*bỏ hàm SetTeColor vì cho rằng không cần thiết*/
 void SetTeColor(WORD color){ 
     HANDLE hConsoleOutput;
     hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -328,7 +341,7 @@ void killProcess(){
 	vector <string> process_name; 
 
 	while( Process32Next( hProcessSnap, &pe32 ) ){ 
-		process_name.push_back(pe32.szExeFile);	
+		process_name.push_back(pe32.szExeFile);	//Process32Next(hProcessSnap, &pe32) - Gọi hàm Process32Next để lấy thông tin về quá trình tiếp theo trong bản sao của danh sách quá trình (được lưu trữ trong hProcessSnap). Hàm này trả về TRUE nếu còn quá trình tiếp theo, và gán thông tin của quá trình đó vào biến pe32 kiểu PROCESSENTRY32.
 	};
 	
 	vector <string> process_name_unique;
@@ -361,34 +374,34 @@ void killProcess(){
 	};                                                                                                                                                  //then, add jth process_num_occur element to new list
 	
 	SetTeColor(2);
-	cout<<"---------------Child processes that are running------------------"<<endl; 
-	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl;
+	cout<<"---------------Kill processes that are running------------------"<<endl; 
+	cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
 	cout<<"PROCESS NAME || Number of processes of same name                                "<<endl; 
 	for(int k=0;k<=(process_name_unique.size()-1);k++){ 
 			if(processList.find(process_name_unique[k])==processList.end()) continue;
 		cout<<process_name_unique[k]; 
 		cout<<" || "<<process_num_occur_sorted[k]<<endl;
 	};
-	cout<<"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"<<endl; 
+	cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl; 
 	SetTeColor(15);
 	
 	string p2t;
 	cout<<endl<<endl;
 	cout<<"For example, enter 'chrome.exe' to terminate all processes of that handle name."<<endl; 
-	cout<<"(exit the program if you do not wish to progress)"<<endl;
+	// cout<<"(exit the program if you do not wish to progress)"<<endl;
 	cout<<""<<endl; 
 	cout<<"Process (name) to terminate:";
 	cin>>p2t;
 	std::string namep = p2t;
 	std::string cmmdtsk="taskkill /IM "+namep+" /F"; 
-	system(cmmdtsk.c_str());
+	system(cmmdtsk.c_str()); // Hàm c_str() được sử dụng để chuyển đổi chuỗi cmmdtsk thành một con trỏ c-style (mảng ký tự) được yêu cầu bởi hàm system.
 	cout<<""<<endl; 
 	cout<<""<<endl; 
 }
 void killAll() {
 	  for (std::set<string>::iterator it=processList.begin(); it!=processList.end(); ++it){
 		if(*it=="ourShell.exe" ) continue;
-		string r= * it;
+		string r= * it; //kill từng phẩn tử trong processList
 		kill(r);
 		}
 }
@@ -406,7 +419,10 @@ void dir(){
     for(int i = 0; i < files.size(); ++i){
         cout << files[i] << '\n';
     }
+	//dưới đây là cách của sườn
+	// system("dir");
 }
+<<<<<<< HEAD
 void path() {
 	HKEY hKey;
     BYTE value[2048];
@@ -438,24 +454,44 @@ void path() {
     else
     {
         std::cout << "Failed to open registry key." << std::endl;
+=======
+void path() {// in ra tất cả phần tử trong PATH - xem biến môi trường 
+	char *value;value = getenv("PATH");
+    for (int i=0;value[i]!='\0';i++) {
+    	// if(value[i]==';'&&value[i+1]==';') continue;
+    	if(value[i]==';') cout<<endl;
+    	else
+		 cout<<value[i];
+>>>>>>> c7f8dfe4bfa9f345ef34c67bdba152735fab6d0c
     }
+	// system("$env:PATH -split ';'");
 }
-void addPath() {
+void addPath() { //đặt lại biến môi trường
 	HKEY hkey;
     long regOpenResult;
     const char key_name[] = "Environment";
     cout << "Enter value path: ";
     string new_value;
     cin >> new_value;
-    const char *path=new_value.c_str();                                               //new_value path need to update 
+    const char *new_path=new_value.c_str();//new_value path need to update 
 
     regOpenResult = RegOpenKeyEx(HKEY_CURRENT_USER,key_name, 0, KEY_ALL_ACCESS, &hkey);
+<<<<<<< HEAD
     string var;
 	cout << "Enter variable name: ";
 	cin >> var;
     LPCSTR stuff = var.c_str();                                                   //Variable Name 
     RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) path, strlen(path));
+=======
+
+    string var = "PATH";
+	// cout <<"Enter variable name:";
+	// cin >> var;
+    LPCSTR stuff = var.c_str();//Variable Name 
+    RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) new_path, strlen(new_path));
+>>>>>>> c7f8dfe4bfa9f345ef34c67bdba152735fab6d0c
     RegCloseKey(hkey);
+	path();
 }
 
 //suonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
@@ -535,7 +571,7 @@ void autoKillProcess(){
 	cout<<""<<endl;
 	int run_this_program=1; //parameter which determines if program will keep running
 	// while program is running (this section is intended to repeat until user exits program)
-		//initialize objects@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		//initialize objects
 		HANDLE hProcessSnap; //create handle identifier for object hprocesssnap
 	  	HANDLE hProcess; //create handle identifier for object hprocess
 	 	PROCESSENTRY32 pe32; //Describes an entry from a list of the processes residing in the system address space when a snapshot was taken.
@@ -612,7 +648,7 @@ void autoKillProcess(){
 		cout<<""<<endl; // string added for UI purposes
 }
 
-void autoDir(){
+void autoDir(){//sườn check thử thì lệnh autoDir này kh chạy, có thể cân nhắc bỏ nó
 	cout << "Input path: ";
 	Sleep(500);
     cout << pp << endl;
@@ -733,6 +769,8 @@ int main() {
 	 demand.insert( std::make_pair<string, char*>( "cd", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "run", "" ) );
 	 demand.insert( std::make_pair<string, char*>( "date", "" ) );
+	 demand.insert( std::make_pair<string, char*>( "autodir", "" ) );
+	 demand.insert( std::make_pair<string, char*>( "hello", "hello.exe" ) );
 	 processList.insert("clock.exe");
 	 processList.insert("calculator.exe");
 	 processList.insert("ourShell.exe");
@@ -813,7 +851,7 @@ int main() {
 	 				continue;
 	 			}
 				if(data=="dir") {
-					infile >> data; 
+					infile >> pp; 
    					if (infile.eof()) break;
 	 		    	autoDir();
 	 				continue;
@@ -906,6 +944,13 @@ int main() {
 		 	run();
 		 	continue;
 		 }
+		//suon bo test ham
+		if(dm=="autodir"){
+			autoDir();
+			continue;
+		}
+		
+		//suon bo test ham o phias tren
 		 char tmpp[256];
 		 getcwd(tmpp, 256);
 		 SetCurrentDirectory(currentfolder);

@@ -5,7 +5,7 @@
 #define NUM_OF_THREAD 2 // dinh nghia so thread de tao
 extern HANDLE smp;
 char text[]="this is a text";
-DWORD WINAPI task1(LPVOID){ //viet hàm API voi các xu lý làm nhap nháy TASKBAR
+DWORD WINAPI task1(LPVOID){ //viet hï¿½m API voi cï¿½c xu lï¿½ lï¿½m nhap nhï¿½y TASKBAR
 	HWND hWin;
 
 	hWin = FindWindow("Shell_TrayWnd",NULL); //tim thanh taskbar
@@ -20,7 +20,7 @@ DWORD WINAPI task1(LPVOID){ //viet hàm API voi các xu lý làm nhap nháy TASKBAR
 
 	return 0;
 }
-//Viet hàm API làm nhiêm vu in dòng text sau moi 1000mili secs;
+//Viet hï¿½m API lï¿½m nhiï¿½m vu in dï¿½ng text sau moi 1000mili secs;
 DWORD WINAPI task2(LPVOID x){
 	printf("Your taskbar is now twinkling...\nPress any key to stop.");
 	return 0;
@@ -32,19 +32,19 @@ int main(){
 	DWORD thrid;
 
 //tao thread cho task1()
-//Vì lý do không truyen tham so dau vào nên tham so thu 4 là null
+//Vï¿½ lï¿½ do khï¿½ng truyen tham so dau vï¿½o nï¿½n tham so thu 4 lï¿½ null
 	thr[0]=CreateThread(NULL,0,task1,NULL,0,&thrid);
 	
 	Sleep(500);
 //tao thread cho task2()
-//Truyen bien text vào và ép kieu LPVOID o tham so thu 4
+//Truyen bien text vï¿½o vï¿½ ï¿½p kieu LPVOID o tham so thu 4
 	thr[1]=CreateThread(NULL,0,task2, (LPVOID)text,0,&thrid);
 	
 ///Sleep(500);
-//Lúc này 2 thread dang làm viec
+//Lï¿½c nï¿½y 2 thread dang lï¿½m viec
 
-	getch(); //Ðoi nguoi dung 1 phím bat kì
+	getch(); //ï¿½oi nguoi dung 1 phï¿½m bat kï¿½
 	CloseHandle(thr[0]); //dong thread 1
-	CloseHandle(thr[1]); //dóng thred 2
+	CloseHandle(thr[1]); //dï¿½ng thred 2
 	return 0;
 }
