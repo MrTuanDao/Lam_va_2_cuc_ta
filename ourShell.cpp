@@ -803,7 +803,7 @@ int main() {
 	 				continue;
 	 			}
 				if(data=="dir") {
-					infile >> data; 
+					infile >> pp; 
    					if (infile.eof()) break;
 	 		    	autoDir();
 	 				continue;
