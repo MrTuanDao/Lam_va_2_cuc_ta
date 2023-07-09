@@ -425,10 +425,12 @@ void dir(){
 void path() {// in ra tất cả phần tử trong PATH - xem biến môi trường 
 	char *value;value = getenv("PATH");
     for (int i=0;value[i]!='\0';i++) {
-    	if(value[i]==';'&&value[i+1]==';') continue;
+    	// if(value[i]==';'&&value[i+1]==';') continue;
     	if(value[i]==';') cout<<endl;
-    	else cout<<value[i];
+    	else
+		 cout<<value[i];
     }
+	// system("$env:PATH -split ';'");
 }
 void addPath() { //đặt lại biến môi trường
 	HKEY hkey;
@@ -437,7 +439,7 @@ void addPath() { //đặt lại biến môi trường
     cout << "Enter value path: ";
     string new_value;
     cin >> new_value;
-    const char *path=new_value.c_str();//new_value path need to update 
+    const char *new_path=new_value.c_str();//new_value path need to update 
 
     regOpenResult = RegOpenKeyEx(HKEY_CURRENT_USER,key_name, 0, KEY_ALL_ACCESS, &hkey);
 
@@ -445,8 +447,9 @@ void addPath() { //đặt lại biến môi trường
 	// cout <<"Enter variable name:";
 	// cin >> var;
     LPCSTR stuff = var.c_str();//Variable Name 
-    RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) path, strlen(path));
+    RegSetValueEx(hkey,stuff,0,REG_SZ,(BYTE*) new_path, strlen(new_path));
     RegCloseKey(hkey);
+	path();
 }
 
 //suonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
