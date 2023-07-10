@@ -1,4 +1,8 @@
-addPath
-C:\Users\Admin\Desktop\TinyShell
-tuan 
-path
+clock
+1
+
+pause
+clock.exe
+
+killProcess
+clock.exe
