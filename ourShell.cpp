@@ -706,8 +706,8 @@ void run() {
 	int n = ds.length();
     char char_array[n + 1];
     strcpy(char_array, ds.c_str());
-	cout<<endl<<"1. Parallel (Processes run in parallel)"<<endl;
-	    cout<<"2. One By One (Processes run one by one)"<<endl;
+	cout<<endl<<"1. Background (Processes run in parallel)"<<endl;
+	    cout<<"2. Foreground (Processes run one by one)"<<endl;
 	    do {
 		cout<<"Choose mode (1/2): ";
 		cin>>a;
@@ -841,8 +841,8 @@ int main() {
 	 		    	autoAddPath();
 	 				continue;
 	 			}
-	    		cout<<"1. Parallel (Processes run in parallel)"<<endl;
-	    		cout<<"2. One By One (Processes run one by one)"<<endl;
+	    		cout<<"1. Background (Processes run in parallel)"<<endl;
+	    		cout<<"2. Foreground (Processes run one by one)"<<endl;
 	    		do {
 	    			cout<<"Choose mode (1/2): ";
 	    			infile >> b; 
@@ -927,8 +927,8 @@ int main() {
 		 char tmpp[256];
 		 getcwd(tmpp, 256);
 		 SetCurrentDirectory(currentfolder);
-	    cout<<"1. Parallel (Processes run in parallel)"<<endl;
-	    cout<<"2. One By One (Processes run one by one)"<<endl;
+	    cout<<"1. Background (Processes run in parallel)"<<endl;
+	    cout<<"2. Foreground (Processes run one by one)"<<endl;
 	    do {
 		cout<<"Choose mode (1/2): ";
 		cin>>a;
