@@ -398,10 +398,88 @@ void killProcess(){
 	cout<<""<<endl; 
 	cout<<""<<endl; 
 }
+
+void autokillProcess(){ 
+	Sleep(2000);
+	cout<<"################################################################################"<<endl; 
+	cout<<"######################### Task Process Terminator ##############################"<<endl; 
+	cout<<"################################################################################"<<endl; 
+	cout<<""<<endl;
+	cout<<""<<endl;
+	cout<<""<<endl;
+	int run_this_program=1; 
+	HANDLE hProcessSnap; 
+	HANDLE hProcess; 
+	PROCESSENTRY32 pe32;
+	DWORD dwPriorityClass; 
+	hProcessSnap = CreateToolhelp32Snapshot( TH32CS_SNAPPROCESS, 0 );
+	pe32.dwSize = sizeof( PROCESSENTRY32 ); 
+	vector <string> process_name; 
+
+	while( Process32Next( hProcessSnap, &pe32 ) ){ 
+		process_name.push_back(pe32.szExeFile);	//Process32Next(hProcessSnap, &pe32) - Gọi hàm Process32Next để lấy thông tin về quá trình tiếp theo trong bản sao của danh sách quá trình (được lưu trữ trong hProcessSnap). Hàm này trả về TRUE nếu còn quá trình tiếp theo, và gán thông tin của quá trình đó vào biến pe32 kiểu PROCESSENTRY32.
+	};
+	
+	vector <string> process_name_unique;
+	vector <int> process_num_occur; 
+	process_name_unique.push_back(process_name[3]);
+	process_num_occur.push_back(1); 
+	for(int k=3;k<=process_name.size()-1;k++){ 
+		int add_unique=1; 
+		for(int j=0;j<=process_name_unique.size()-1;j++){ 
+			string st1=process_name[k]; 
+			string st2=process_name_unique[j];
+			if(strcmp(st1.c_str(),st2.c_str())==0 && add_unique==1 ){ 
+																		
+				process_num_occur[j]+=1; 
+				add_unique=0; 
+			}; 
+		};  
+		if(add_unique==1){
+			process_name_unique.push_back(process_name[k]); 
+			process_num_occur.push_back(1);
+		}; 
+	};
+	
+	vector <string> process_name_unique_unsorted; 
+	vector <int> process_num_occur_sorted; 
+	for(int k=0;k!=process_name_unique.size();k++) process_name_unique_unsorted.push_back(process_name_unique[k]);
+	std::sort(process_name_unique.begin(),process_name_unique.end(),compareFunction);
+	for(int k=0;k!=process_name_unique.size();k++) for(int j=0;j!=process_name_unique.size();j++){ // for each element of sorted(k) and unsorted (j) for process name [Double for loop defined in one line]
+		if(strcmp(process_name_unique[k].c_str(),process_name_unique_unsorted[j].c_str())==0) process_num_occur_sorted.push_back(process_num_occur[j]); //if string of kth string (sorted) and jth string (unsorted) match;
+	};                                                                                                                                                  //then, add jth process_num_occur element to new list
+	
+	SetTeColor(2);
+	cout<<"---------------Kill processes that are running------------------"<<endl; 
+	cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
+	cout<<"PROCESS NAME || Number of processes of same name                                "<<endl; 
+	for(int k=0;k<=(process_name_unique.size()-1);k++){ 
+			if(processList.find(process_name_unique[k])==processList.end()) continue;
+		cout<<process_name_unique[k]; 
+		cout<<" || "<<process_num_occur_sorted[k]<<endl;
+	};
+	cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl; 
+	SetTeColor(15);
+	
+	string p2t;
+	cout<<endl<<endl;
+	cout<<"For example, enter 'chrome.exe' to terminate all processes of that handle name."<<endl; 
+	// cout<<"(exit the program if you do not wish to progress)"<<endl;
+	cout<<""<<endl; 
+	cout<<"Process (name) to terminate:"<<pp<<endl;
+	Sleep(1000);
+	std::string namep = pp;
+	std::string cmmdtsk="taskkill /IM "+namep+" /F"; 
+	system(cmmdtsk.c_str()); // Hàm c_str() được sử dụng để chuyển đổi chuỗi cmmdtsk thành một con trỏ c-style (mảng ký tự) được yêu cầu bởi hàm system.
+	cout<<""<<endl; 
+	cout<<""<<endl; 
+}
+
 void killAll() {
 	  for (std::set<string>::iterator it=processList.begin(); it!=processList.end(); ++it){
 		if(*it=="ourShell.exe" ) continue;
-		string r= * it; //kill từng phẩn tử trong processList
+		string r= * it;
+		// std::cout << r<<endl; //kill từng phẩn tử trong processList
 		kill(r);
 		}
 }
@@ -785,6 +863,12 @@ int main() {
 	 				cout<<"The demand isn't available!"<<endl;
 	 				continue;
 	 			}
+				if(data=="killProcess"){
+					infile >> pp;
+					if (infile.eof()) break;
+	 				autokillProcess();
+	 				continue;
+				}
 	 			if(data=="date") {
 	 				system("DATE");
 	 				continue;
