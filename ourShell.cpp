@@ -400,7 +400,7 @@ void killProcess(){
 }
 
 void autokillProcess(){ 
-	Sleep(1000);
+	Sleep(2000);
 	cout<<"################################################################################"<<endl; 
 	cout<<"######################### Task Process Terminator ##############################"<<endl; 
 	cout<<"################################################################################"<<endl; 
@@ -466,8 +466,8 @@ void autokillProcess(){
 	cout<<"For example, enter 'chrome.exe' to terminate all processes of that handle name."<<endl; 
 	// cout<<"(exit the program if you do not wish to progress)"<<endl;
 	cout<<""<<endl; 
-	cout<<"Process (name) to terminate:";
-	
+	cout<<"Process (name) to terminate:"<<pp<<endl;
+	Sleep(1000);
 	std::string namep = pp;
 	std::string cmmdtsk="taskkill /IM "+namep+" /F"; 
 	system(cmmdtsk.c_str()); // Hàm c_str() được sử dụng để chuyển đổi chuỗi cmmdtsk thành một con trỏ c-style (mảng ký tự) được yêu cầu bởi hàm system.
@@ -478,7 +478,8 @@ void autokillProcess(){
 void killAll() {
 	  for (std::set<string>::iterator it=processList.begin(); it!=processList.end(); ++it){
 		if(*it=="ourShell.exe" ) continue;
-		string r= * it; //kill từng phẩn tử trong processList
+		string r= * it;
+		// std::cout << r<<endl; //kill từng phẩn tử trong processList
 		kill(r);
 		}
 }
